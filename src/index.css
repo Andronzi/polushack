@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
 
 input {
   outline: none;
@@ -142,4 +142,23 @@ q:after {
 table {
   border-collapse: collapse;
   border-spacing: 0;
+}
+
+.form-registration {
+  min-width: 610px;
+}
+
+@media screen and (max-width: 630px) {
+  .form-registration {
+    min-width: 90%;
+  }
+}
+
+.form-registration__input {
+  /* max-width: 610px; */
+  box-shadow: 0px 0px 8px rgba(182, 182, 182, 0.25);
+}
+
+.form__button:hover {
+  background-color: #BA880A;
 }

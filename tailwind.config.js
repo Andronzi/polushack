@@ -13,12 +13,13 @@ module.exports = {
           "black": "#000000",
           "lightgrey": "#EAEAEA",
           "darkgrey": "#5C5C5C",
-          "white": "#FFFFFF"
+          "white": "#FFFFFF",
+          "yellow": "#FBBD1F",
         }
       },
 
       fontFamily: {
-        "nunito": ["Nunito"]
+        "montserrat": ["Montserrat"]
       }
     },
     plugins: [],
