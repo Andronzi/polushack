@@ -5,6 +5,8 @@ import Home from "@Components/Home";
 
 import React from "react";
 import Navbar from "@Components/Navbar";
+import Request from "@Components/Request/Request";
+import RequestInfo from "@Components/Request/RequestInfo";
 
 const App = () => (
   <div className="App">
@@ -24,6 +26,16 @@ const App = () => (
       <Route
         element={<Home />}
         path="/home"
+      />
+
+      <Route
+        element={<Request />}
+        path="/request"
+      />
+
+      <Route
+        element={<RequestInfo />}
+        path="request-info"
       />
     </Routes>
   </div>
