@@ -7,6 +7,7 @@ import React from "react";
 import Navbar from "@Components/Navbar";
 import Request from "@Components/Request/Request";
 import RequestInfo from "@Components/Request/RequestInfo";
+import TransportInfo from "@Components/TransportInfo/TransportInfo";
 
 const App = () => (
   <div className="App">
@@ -35,7 +36,12 @@ const App = () => (
 
       <Route
         element={<RequestInfo />}
-        path="request-info"
+        path="/request-info"
+      />
+
+      <Route
+        element={<TransportInfo />}
+        path="/transport-info"
       />
     </Routes>
   </div>

@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import host from "@redux/host";
 
 export const createUser = createAsyncThunk(
   "users/createUser",
   async (userData: string) => {
-    const url = `https://6307551fc0d0f2b8012cb7ad.mockapi.io/api/todo/users`;
+    const url = `${host}/users`;
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -17,7 +18,7 @@ export const createUser = createAsyncThunk(
   },
 );
 
-export interface UserState {
+interface User {
   id: number;
   firstName: string;
   lastName: string;
@@ -25,16 +26,33 @@ export interface UserState {
   role: string;
 }
 
+export type UserState = {
+  user: User;
+  status: string;
+};
+
 export const userSlice = createSlice({
   name: "user",
-  initialState: {} as UserState,
-  reducers: {},
+  initialState: { user: {}, status: "waiting" } as UserState,
+  reducers: {
+    setDefaultStatus(state) {
+      state.status = "waiting";
+    },
+  },
   extraReducers: builder => {
-    builder.addCase(createUser.fulfilled, (state: UserState, action: any) => ({
-      ...state,
-      ...action.payload,
-    }));
+    builder
+      .addCase(createUser.pending, (state: UserState) => {
+        state.status = "pending";
+      })
+      .addCase(createUser.fulfilled, (state: UserState, action: any) => {
+        state.user = action.payload;
+        state.status = "fulfilled";
+      })
+      .addCase(createUser.rejected, (state: UserState) => {
+        state.status = "rejected";
+      });
   },
 });
 
+export const { setDefaultStatus } = userSlice.actions;
 export default userSlice.reducer;
