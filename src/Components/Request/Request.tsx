@@ -1,18 +1,17 @@
+/* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable react/jsx-max-depth */
 import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import logo from "@images/logo-digital.svg";
 import { useAppDispatch } from "@redux/hooks";
 import { createUser } from "@redux/store/userSlice";
 import { useNavigate, Link } from "react-router-dom";
-import Input from "@Components/Login/Input";
 import Button from "@Components/Button";
 
 export interface IFormValues {
-  email: string;
-  password: string;
+  site_type: string;
 }
 
-const LoginForm: React.FC = () => {
+const Request: React.FC = () => {
   const { register, handleSubmit } = useForm<IFormValues>();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -24,41 +23,71 @@ const LoginForm: React.FC = () => {
   return (
     <div className="flex direction-col justify-center align-center w-screen">
       <form
-        className="form-registration flex justify-center items-center flex-col"
+        className="form-request flex justify-center items-center flex-col max-w-6xl w-full"
         onSubmit={handleSubmit(onSubmit)}>
-        <img
-          alt="logo"
-          className="w-60"
-          src={logo}
-        />
-
-        <Input
-          label="email"
-          placeholder="Ваш email"
-          register={register}
-          required
-        />
-
-        <Input
-          label="password"
-          placeholder="Ваш пароль"
-          register={register}
-          required
-        />
-
-        <Button value="Авторизоваться" />
-
-        <p className="font-montserrat mt-2 text-2xl">
-          Еще не зарегистрированы?
-          <Link to="/register">
-            <span className="font-montserrat font-semibold text-sky-600	">
-              Зарегистрироваться
-            </span>
-          </Link>
+        <p className="text-center font-montserrat mt-6">
+          Создать заявку (Забронировать ресурс)
         </p>
+
+        <div className="form__block flex w-full justify-between mt-4">
+          <select
+            className="form-request__select h-16 font-montserrat pl-6 w-1/2 rounded-xl"
+            {...register("site_type")}>
+            <option value="Парк автовышек">Парк автовышек</option>
+
+            <option value="Парк кранов">Парк кранов</option>
+
+            <option value="Парк кранов">Парк погрузчиков</option>
+          </select>
+
+          <select
+            className="form-request__select h-16 font-montserrat pl-6 w-1/2 ml-20 rounded-xl"
+            {...register("site_type")}>
+            <option value="Парк автовышек">Выберите характеристику ТС </option>
+          </select>
+        </div>
+
+        <div className="form__block flex w-full justify-between mt-4">
+          <div className="form__block__input_useLabel w-full">
+            <label
+              className="block font-montserrat"
+              htmlFor="date_input">
+              Выберите дату получения ТС
+            </label>
+
+            <input
+              className="form-request__input block h-16 font-montserrat pl-6 w-full ml-20 rounded-xl mt-2"
+              id="date_input"
+              name="date_input"
+              type="date"
+            />
+          </div>
+
+          <div className="form__block__input_useLabel w-full ml-20">
+            <label
+              className="block font-montserrat"
+              htmlFor="date_period">
+              На какой срок вам требуется ТС
+            </label>
+
+            <input
+              className="form-request__input block h-16 font-montserrat pl-6 w-full ml-20 rounded-xl mt-2"
+              id="date_period"
+              name="date_period"
+              type="text"
+            />
+          </div>
+        </div>
+
+        <input
+          className="form-request__input block h-16 font-montserrat pl-6 w-full rounded-xl mt-4"
+          placeholder="Выберите геолокацию"
+        />
+
+        <Button value="Отправить заявку" />
       </form>
     </div>
   );
 };
 
-export default LoginForm;
+export default Request;
