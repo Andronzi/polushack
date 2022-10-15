@@ -1,12 +1,6 @@
 import React from "react";
 import { Path, UseFormRegister } from "react-hook-form";
-
-interface IFormValues {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-}
+import { IFormValues } from "@Components/Registration/RegForm";
 
 type InputProps = {
   label: Path<IFormValues>;
