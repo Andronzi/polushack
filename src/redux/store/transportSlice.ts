@@ -19,14 +19,15 @@ export const getAllTransport = createAsyncThunk(
 
 interface Transport {
   type: string;
-  characteristic: string;
+  characteristics: string;
   name: string;
   car_number: string;
 }
 
 export type TransportState = {
   transports: Array<Transport>;
-  currentTransports: Array<Transport>;
+  currentCharacterestics: Array<string>;
+  types: Array<string>;
   status: string;
 };
 
@@ -34,12 +35,20 @@ export const transportSlice = createSlice({
   name: "transport",
   initialState: {
     transports: [],
-    currentTransports: [],
+    currentCharacterestics: [],
+    types: [],
     status: "waiting",
   } as TransportState,
   reducers: {
     changeTransport(state: TransportState, action: any) {
-      state.currentTransports = action.payload;
+      const transportWithCharacterestics = action.payload;
+      const characteristics: Array<string> = [];
+      transportWithCharacterestics.forEach((transport: Transport) => {
+        if (!characteristics.includes(transport.characteristics)) {
+          characteristics.push(transport.characteristics);
+        }
+      });
+      state.currentCharacterestics = characteristics;
     },
   },
   extraReducers: builder => {
@@ -51,7 +60,12 @@ export const transportSlice = createSlice({
         getAllTransport.fulfilled,
         (state: TransportState, action: any) => {
           state.transports = action.payload;
-          state.currentTransports = action.payload;
+          const types = state.transports.map(transport => transport.type);
+          types.forEach(type => {
+            if (!state.types.includes(type)) {
+              state.types.push(type);
+            }
+          });
           state.status = "fulfilled";
         },
       )

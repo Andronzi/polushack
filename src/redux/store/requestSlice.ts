@@ -33,6 +33,23 @@ export const getRequestsAsStatus = createAsyncThunk(
   },
 );
 
+export const createRequest = createAsyncThunk(
+  "requests/createRequest",
+  async (requestData: string) => {
+    const url = `${host}/request`;
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json;charset=utf-8",
+      },
+      body: requestData,
+    });
+
+    const result = await response.json();
+    return result;
+  },
+);
+
 export interface Request {
   id: number;
   request_id: number;
@@ -75,6 +92,16 @@ export const requestSlice = createSlice({
       })
       .addCase(getRequestsAsStatus.rejected, (state: RequestState) => {
         state.status = "default";
+      })
+      .addCase(createRequest.pending, (state: RequestState) => {
+        state.status = "pending";
+      })
+      .addCase(createRequest.fulfilled, (state: RequestState, action: any) => {
+        state.status = "fulfilled";
+        state.requests.push(action.payload);
+      })
+      .addCase(createRequest.rejected, (state: RequestState, action: any) => {
+        state.status = "rejected";
       });
   },
 });

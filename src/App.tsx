@@ -8,43 +8,51 @@ import Navbar from "@Components/Navbar";
 import Request from "@Components/Request/Request";
 import RequestInfo from "@Components/Request/RequestInfo";
 import TransportInfo from "@Components/TransportInfo/TransportInfo";
+import { useAppDispatch } from "@redux/hooks";
+import { getAllTransport } from "@redux/store/transportSlice";
 
-const App = () => (
-  <div className="App">
-    <Navbar />
+const App = () => {
+  const dispatch = useAppDispatch();
+  React.useEffect(() => {
+    dispatch(getAllTransport());
+  }, [dispatch]);
+  return (
+    <div className="App">
+      <Navbar />
 
-    <Routes>
-      <Route
-        element={<RegForm />}
-        path="/register"
-      />
+      <Routes>
+        <Route
+          element={<RegForm />}
+          path="/register"
+        />
 
-      <Route
-        element={<LoginForm />}
-        path="/login"
-      />
+        <Route
+          element={<LoginForm />}
+          path="/login"
+        />
 
-      <Route
-        element={<Home />}
-        path="/home"
-      />
+        <Route
+          element={<Home />}
+          path="/home"
+        />
 
-      <Route
-        element={<Request />}
-        path="/request"
-      />
+        <Route
+          element={<Request />}
+          path="/request"
+        />
 
-      <Route
-        element={<RequestInfo />}
-        path="/request-info"
-      />
+        <Route
+          element={<RequestInfo />}
+          path="/request-info"
+        />
 
-      <Route
-        element={<TransportInfo />}
-        path="/transport-info"
-      />
-    </Routes>
-  </div>
-);
+        <Route
+          element={<TransportInfo />}
+          path="/transport-info"
+        />
+      </Routes>
+    </div>
+  );
+};
 
 export default App;

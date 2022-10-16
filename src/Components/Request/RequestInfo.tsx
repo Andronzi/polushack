@@ -1,7 +1,11 @@
 import React from "react";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
 import { RootState } from "@redux/store/store";
-import { getRequestsAsStatus, RequestState } from "@redux/store/requestSlice";
+import {
+  getRequests,
+  getRequestsAsStatus,
+  RequestState,
+} from "@redux/store/requestSlice";
 import downarrow from "@images/down-arrow.svg";
 
 const RequestInfo = () => {
@@ -11,7 +15,11 @@ const RequestInfo = () => {
   const dispatch = useAppDispatch();
 
   const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    dispatch(getRequestsAsStatus(event.target.value));
+    if (event.target.value === "Все заявки") {
+      dispatch(getRequests());
+    } else {
+      dispatch(getRequestsAsStatus(event.target.value));
+    }
   };
 
   return (

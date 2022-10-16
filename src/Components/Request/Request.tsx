@@ -4,51 +4,47 @@
 import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
-import { createUser } from "@redux/store/userSlice";
 import Button from "@Components/Button";
-import { YMaps, Map } from "react-yandex-maps";
+import { YMaps, Map, Placemark } from "react-yandex-maps";
 import { TransportState, changeTransport } from "@redux/store/transportSlice";
 import { RootState } from "@redux/store/store";
+import { createRequest } from "@redux/store/requestSlice";
 
 export interface IFormValues {
-  site_type: string;
+  type: string;
+  characteristics: string;
+  target_date: Date;
+  period: number;
+  coords: number[];
 }
 
 const Request: React.FC = () => {
   const { register, handleSubmit } = useForm<IFormValues>();
+  const [selectState, setSelectState] = React.useState("Выберите парк техники");
+  const [mapState, setMapState] = React.useState([55.75, 37.57]);
   const dispatch = useAppDispatch();
   const transportState: TransportState = useAppSelector(
     (state: RootState) => state.transport,
   );
+  const defaultMapState = { center: [55.75, 37.57], zoom: 9 };
+  const mapRef = React.useRef();
 
   const onSubmit: SubmitHandler<IFormValues> = data => {
-    dispatch(createUser(JSON.stringify(data)));
+    data.coords = mapState;
+    dispatch(createRequest(JSON.stringify(data)));
   };
 
-  const handleTransportTypeSelect = (
-    event: React.ChangeEvent<HTMLSelectElement>,
-  ) => {
-    console.log(event.target.value);
-    dispatch(
-      changeTransport(
-        transportState.transports.filter(
-          transport => transport.type === event.target.value,
-        ),
-      ),
+  const handleTransportTypeSelect = (event: any) => {
+    const transportWithType = transportState.transports.filter(
+      transport => transport.type === event.target.value,
     );
+    dispatch(changeTransport(transportWithType));
+    setSelectState(event.target.value);
   };
 
-  const handleTransportCharacteristic = (
-    event: React.ChangeEvent<HTMLSelectElement>,
-  ) => {
-    console.log(event.target.value);
-    dispatch(
-      changeTransport(
-        transportState.currentTransports.filter(
-          transport => transport.type === event.target.value,
-        ),
-      ),
-    );
+  const handleMapClick = (event: any) => {
+    // eslint-disable-next-line no-underscore-dangle
+    setMapState(event._sourceEvent.originalEvent.coords);
   };
 
   return (
@@ -63,25 +59,17 @@ const Request: React.FC = () => {
         <div className="form__block flex w-full justify-between mt-4">
           <select
             className="form-request__select h-16 font-montserrat pl-6 w-1/2 rounded-xl"
-            {...register("site_type")}
-            onChange={handleTransportTypeSelect}>
-            <option
-              disabled
-              hidden
-              selected
-              value="Парк автовышек">
-              Выберите парк техники
-            </option>
-
-            {transportState.currentTransports.map(transport => (
-              <option value={transport.type}>{transport.type}</option>
+            {...register("type")}
+            onChange={handleTransportTypeSelect}
+            value={selectState}>
+            {transportState.types.map(type => (
+              <option value={type}>{type}</option>
             ))}
           </select>
 
           <select
             className="form-request__select h-16 font-montserrat pl-6 w-1/2 ml-20 rounded-xl"
-            {...register("site_type")}
-            onChange={handleTransportCharacteristic}>
+            {...register("characteristics")}>
             <option
               disabled
               hidden
@@ -90,10 +78,8 @@ const Request: React.FC = () => {
               Выберите характеристику ТС
             </option>
 
-            {transportState.currentTransports.map(transport => (
-              <option value={transport.characteristic}>
-                {transport.characteristic}
-              </option>
+            {transportState.currentCharacterestics.map(characterestic => (
+              <option value={characterestic}>{characterestic}</option>
             ))}
           </select>
         </div>
@@ -107,8 +93,8 @@ const Request: React.FC = () => {
               <input
                 className="form-request__input block h-16 font-montserrat pl-6 w-full ml-20 rounded-xl mt-2"
                 id="date_input"
-                name="date_input"
                 type="date"
+                {...register("target_date")}
               />
             </label>
           </div>
@@ -121,8 +107,8 @@ const Request: React.FC = () => {
               <input
                 className="form-request__input block h-16 font-montserrat pl-6 w-full ml-20 rounded-xl mt-2"
                 id="date_period"
-                name="date_period"
                 type="number"
+                {...register("period")}
               />
             </label>
           </div>
@@ -135,9 +121,12 @@ const Request: React.FC = () => {
             </p>
 
             <Map
+              ref={mapRef}
               className="mt-4 w-full h-52"
-              defaultState={{ center: [55.75, 37.57], zoom: 9 }}
-            />
+              defaultState={defaultMapState}
+              onClick={handleMapClick}>
+              <Placemark geometry={mapState} />
+            </Map>
           </div>
         </YMaps>
 
